@@ -1,0 +1,93 @@
+body {
+  background-color: black;
+}
+.container {
+  margin-left: -10px;
+}
+
+#header {
+  width: 190%;
+  height: 100px;
+  background-color: rgb(89, 79, 79);
+  display: flex;
+  justify-content: space-between;
+}
+#header #left {
+  display: flex;
+}
+#header #left img {
+  border-radius: 50%;
+}
+#header #right {
+  margin-right: 90px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#header #search {
+  display: none;
+}
+
+#header #logout-div {
+  display: none;
+}
+
+#errormessage {
+  color: red;
+}
+div > #content {
+  width: 150%;
+  font-size: 200%;
+  color: aquamarine;
+  margin-left: 40%;
+  margin-top: 10%;
+}
+div > #musiclist {
+  background-color: rgb(50, 46, 46);
+  font-size: 200%;
+  width: 120%;
+  color: aquamarine;
+  margin-left: 20%;
+  margin-top: 5%;
+}
+div > #playlists {
+  background-color: rgb(50, 46, 46);
+  font-size: 200%;
+  width: 120%;
+  color: pink;
+  margin-left: 20%;
+  margin-top: 1%;
+}
+div > #favoriteMusic {
+  width: 150%;
+  font-size: 200%;
+  color: pink;
+  margin-left: 40%;
+  margin-top: 1%;
+  padding-left: 0px;
+}
+#byTitle {
+  display: list-item;
+  margin-left: 10px;
+}
+#logoutBtn {
+  margin-left: 10px;
+}
+input {
+  height: 37px;
+  /* margin-top: 3px; */
+}
+button {
+  margin-bottom: 4px;
+}
+#search {
+  margin-right: 600px;
+}
+audio {
+  margin: 30px;
+  width: 90%;
+  background-color: rgb(89, 79, 79);
+  display: flex;
+  justify-content: space-between;
+}
