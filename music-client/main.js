@@ -69,7 +69,7 @@ function fetchMusic() {
     // .then((songs) => console.log(songs));
     .then((musicDB) => {
       let html = `
-        <table class="table id="firstTable">
+        <table class="table" id="firstTable">
         <thead>
         <tr>
         <th scope="col">id</th>
@@ -122,12 +122,12 @@ function fetchPlayList() {
     `;
       playlistDB.forEach((playlistObj) => {
         html += `
-    <tr id="tr${playlistObj.songID}">
+    <tr id="tr${playlistObj.songId}">
     <th scope="row" >${playlistDB.indexOf(playlistObj) + 1}</th>
     <td >${playlistObj.title}</td>
     <td id="deletePlay" style="padding-left:30px">
-    <button id="rem" data-music="${playlistObj.songID}" 
-      onclick="removeMusic('${playlistObj}')">
+    <button id="rem" data-music="${playlistObj.songId}" 
+      onclick="removeMusic('${playlistObj.songId}')">
       <img src="./images/cross.jpg" alt="Delet" style="width:30px;">
      </button>
      <button onclick="playMusic('${playlistObj.urlPath}')">
@@ -158,38 +158,40 @@ function addByIcon(id) {
   fetchPlayList();
 }
 
-function removeMusic(musicObj) {
-  fetch(`${SERVER_ROOT}/api/playlist/remove`, {
-    method: "POST",
-    body: JSON.stringify({}),
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-  })
-    .then((response) => response.json())
-    .then(() => {
-      let arr = document.getElementById("table-body");
-      //arr.forEach((i) => i.remove());
-      arr.remove();
-    });
-
-  // let sId = musicObj.getAttribute("data-music");
+function removeMusic(sId) {
   // fetch(`${SERVER_ROOT}/api/playlist/remove`, {
-  // method: "post",
-  // body: JSON.stringify({
-  // sId,
-  // }),
+  // method: "POST",
+  // body: JSON.stringify({}),
   // headers: {
-  // "Content-Type": "application/json",
   // Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
   // },
+  // })
+  // .then((response) => response.json())
+  // .then(() => {
+  // let arr = document.getElementById("table-body");
+  ////arr.forEach((i) => i.remove());
+  // arr.remove();
   // });
-  // fetchPlayList();
+
+  //let sId = musicObj.getAttribute("data-music");
+  //let sId = obj.getAttribute("data-music");
+
+  fetch(`${SERVER_ROOT}/api/playlist/remove`, {
+    method: "POST",
+    body: JSON.stringify({
+      songId: sId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+  fetchPlayList();
 }
 
-function playMusic() {
+function playMusic(path) {
   let mp3 = document.getElementsByTagName("audio")[0];
-  mp3.setAttribute("src= `${playlistDB.urlPath}`");
+  mp3.setAttribute("src", `${SERVER_ROOT}/${path}`);
   mp3.play();
 }
 
