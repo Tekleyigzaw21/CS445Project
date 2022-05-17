@@ -69,16 +69,16 @@ function fetchMusic() {
     // .then((songs) => console.log(songs));
     .then((musicDB) => {
       let html = `
-        <table class='table' id="firstTable">
+        <table class="table id="firstTable">
         <thead>
         <tr>
-        <th scope='col'>id</th>
-        <th scope='col'>title</th>
-        <th scope='col'>releaseDate</th>
-        <th scope='col'>Actions</th>
+        <th scope="col">id</th>
+        <th scope="col">title</th>
+        <th scope="col">releaseDate</th>
+        <th scope="col">Actions</th>
         </tr>
         </thead>
-        <tbody id="table-body">
+        <tbody id="tabody">
         `;
       musicDB.forEach((musicObj) => {
         html += `
@@ -86,8 +86,8 @@ function fetchMusic() {
         <th scope="row" >${musicDB.indexOf(musicObj) + 1}</th>
         <td id="byTitle">${musicObj.title}</td>
         <td>${musicObj.releaseDate}</td>
-        <td><button id='addBtn' onclick='addByIcon()'>
-        <img src="./images/plusIcon.webp" alt="Icon" style="width:30px" id ='plusicon'/>
+        <td><button id="addBtn" onclick="addByIcon('${musicObj.id}')">
+        <img src="./images/plusIcon.webp" alt="Icon" style="width:30px" id ="plusicon"/>
         </button></td>
         </tr>
         `;
@@ -110,27 +110,27 @@ function fetchPlayList() {
     // .then((songs) => console.log(songs));
     .then((playlistDB) => {
       let html = `
-    <table class='table' id="scondTable">
+    <table class="table" id="scondTable">
     <thead>
     <tr>
-    <th scope='col'>index</th>
-    <th scope='col'>title</th>
-    <th scope='col'>Actions</th>
+    <th scope="col">index</th>
+    <th scope="col">title</th>
+    <th scope="col">Actions</th>
     </tr>
     </thead>
     <tbody id="table-body">
     `;
       playlistDB.forEach((playlistObj) => {
         html += `
-    <tr id="tr${playlistObj.id}" ">
+    <tr id="tr${playlistObj.songID}">
     <th scope="row" >${playlistDB.indexOf(playlistObj) + 1}</th>
     <td >${playlistObj.title}</td>
-    <td id="deletePlay" style="padding-left:30px"><button onclick='removeMusic(${
-      playlistObj.id
-    })'>
+    <td id="deletePlay" style="padding-left:30px">
+    <button id="rem" data-music="${playlistObj.songID}" 
+      onclick="removeMusic('${playlistObj}')">
       <img src="./images/cross.jpg" alt="Delet" style="width:30px;">
      </button>
-     <button onclick='playMusic(${playlistObj.id})'>
+     <button onclick="playMusic('${playlistObj.urlPath}')">
      <img src="./images/playIcon.jpg" alt="play" style="width:30px">
     </button></td>
     </tr>
@@ -143,22 +143,6 @@ function fetchPlayList() {
       document.getElementById("playlists").innerHTML = html;
     });
 }
-// function addByIcon() {
-// let table = document.getElementById("firstTable");
-// let playTable = document.getElementById("scondTable");
-// let row = playTable.insertRow(playTable.length);
-// let cell1 = row.insertCell(0);
-// let cell2 = row.insertCell(1);
-// let cell3 = row.insertCell(2);
-//let cell4 = row.insertCell(3);
-// let tr1 = table.getElementsByTagName("tr");
-// let td1 = tr1.getElementsByTagName("td");
-// let tr2 = playTable.getElementsByTagName("tr");
-// let td2 = tr2.getElementsByTagName("td");
-// cell1.innerHTML = td1[0].innerHTML;
-// cell2.innerHTML = td1[1].innerHTML;
-// cell3.innerHTML = td2[2].innerHTML;
-// cell4.innerHTML = td[3].innerHTML;
 
 function addByIcon(id) {
   fetch(`${SERVER_ROOT}/api/playlist/add`, {
@@ -170,55 +154,44 @@ function addByIcon(id) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
-  })
-    .then((response) => response.json())
-    .then((playlistDB) => {
-      console.log("button", document.getElementById("addBtn"));
-      let count = 1;
-
-      playlistDB.forEach((playlistObj) => {
-        if (!playlistDB.includes(playlistObj.title)) {
-          if (playlistObj.title === title) {
-            count++;
-            playlistDB.push(playlistObj.title);
-          }
-
-          addedPart += `
-  <tr>
-  <th scope="row" >${playlistDB.indexOf(playlistObj) + 1}</th>
-  <td >${playlistObj.title}</td>
-  <td id="deletePlay" style="padding-left:30px"><button onclick='removeMusic(${
-    playlistObj.id
-  })'>
-  <img src="./images/cross.jpg" alt="Delet" style="width:30px;">
-   </button>
-   <button onclick='playMusic(${playlistObj.id})'>
-   <img src="./images/playIcon.jpg" alt="play" style="width:30px">
-  </button></td>
-  </tr>
-  `;
-          document.getElementById("table-body").innerHTML += addedPart;
-        }
-      });
-    });
+  });
+  fetchPlayList();
 }
 
-function removeMusic(id) {
-  //playTable.deleteRow(0);
+function removeMusic(musicObj) {
   fetch(`${SERVER_ROOT}/api/playlist/remove`, {
     method: "POST",
-    //body: JSON.stringify({}),
+    body: JSON.stringify({}),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
   })
     .then((response) => response.json())
-    .then((data) => {
-      document.getElementById(id).remove();
+    .then(() => {
+      let arr = document.getElementById("table-body");
+      //arr.forEach((i) => i.remove());
+      arr.remove();
     });
+
+  // let sId = musicObj.getAttribute("data-music");
+  // fetch(`${SERVER_ROOT}/api/playlist/remove`, {
+  // method: "post",
+  // body: JSON.stringify({
+  // sId,
+  // }),
+  // headers: {
+  // "Content-Type": "application/json",
+  // Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  // },
+  // });
+  // fetchPlayList();
 }
 
-function playMusic() {}
+function playMusic() {
+  let mp3 = document.getElementsByTagName("audio")[0];
+  mp3.setAttribute("src= `${playlistDB.urlPath}`");
+  mp3.play();
+}
 
 function afterLogin() {
   document.getElementById("search").style.display = "block";
@@ -230,7 +203,8 @@ function afterLogin() {
   document.getElementById("playlists").style.display = "block";
   document.getElementById("content").innerHTML = "Content of the music";
   document.getElementById("favoriteMusic").style.display = "block";
-  addByIcon("addBtn");
+  document.getElementById("audio").style.display = "block";
+  // addByIcon("addBtn");
 }
 
 function notLogin() {
@@ -241,4 +215,5 @@ function notLogin() {
   document.getElementById("musiclist").style.display = "none";
   document.getElementById("playlists").style.display = "none";
   document.getElementById("favoriteMusic").style.display = "none";
+  document.getElementById("audio").style.display = "none";
 }

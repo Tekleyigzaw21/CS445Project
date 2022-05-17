@@ -19,7 +19,7 @@ body {
   border-radius: 50%;
 }
 #header #right {
-  margin-right: 90px;
+  margin-right: 200px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
