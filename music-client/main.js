@@ -31,15 +31,15 @@ window.onload = function () {
   document.getElementById("searchBtn").onclick = function () {
     let txtValue;
     let searchInput = document.getElementById("search-input");
-    let filter = searchInput.value.toUpperCase();
+    let searchVal = searchInput.value.toUpperCase();
     let table = document.getElementById("firstTable");
     let tr = table.getElementsByTagName("tr");
     for (let i = 0; i < tr.length; i++) {
       let td = tr[i].getElementsByTagName("td")[0];
       if (td) {
         txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
+        if (txtValue.toUpperCase().indexOf(searchVal) > -1) {
+          tr[i].style.display = " ";
         } else {
           tr[i].style.display = "none";
         }
@@ -66,7 +66,7 @@ function fetchMusic() {
     },
   })
     .then((response) => response.json())
-    // .then((songs) => console.log(songs));
+    //.then((songs) => console.log(songs));
     .then((musicDB) => {
       let html = `
         <table class="table" id="firstTable">
@@ -173,9 +173,6 @@ function removeMusic(sId) {
   // arr.remove();
   // });
 
-  //let sId = musicObj.getAttribute("data-music");
-  //let sId = obj.getAttribute("data-music");
-
   fetch(`${SERVER_ROOT}/api/playlist/remove`, {
     method: "POST",
     body: JSON.stringify({
@@ -189,9 +186,9 @@ function removeMusic(sId) {
   fetchPlayList();
 }
 
-function playMusic(path) {
+function playMusic(urlPath) {
   let mp3 = document.getElementsByTagName("audio")[0];
-  mp3.setAttribute("src", `${SERVER_ROOT}/${path}`);
+  mp3.setAttribute("src", `${SERVER_ROOT}/${urlPath}`);
   mp3.play();
 }
 
@@ -206,7 +203,6 @@ function afterLogin() {
   document.getElementById("content").innerHTML = "Content of the music";
   document.getElementById("favoriteMusic").style.display = "block";
   document.getElementById("audio").style.display = "block";
-  // addByIcon("addBtn");
 }
 
 function notLogin() {
